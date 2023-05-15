@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 import { DeleteBtn, Item, List } from './ContactList.styled';
+import { delContact } from 'components/Redux/contactSlice';
+import { useSelector } from 'react-redux';
 
-export const ContactList = ({ list, delContact }) => {
+export const ContactList = () => {
+    const contacts = useSelector(state => state.contacts.contacts);
+    const filter = useSelector(state => state.filter.filter);
+    const list = contacts.filter(contact =>  contact.name.toLocaleLowerCase().includes(filter));
     return (
         <List>
             {list.map(({ id, name, number }) => {
