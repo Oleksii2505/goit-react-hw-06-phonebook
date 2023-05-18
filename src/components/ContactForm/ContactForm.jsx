@@ -1,33 +1,38 @@
 import { useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Form, Label, Input, SubmitBtn } from './ContactForm.styled';
+import { addContact, resetForm } from 'components/Redux/contactSlice';
 
-
-export const ContactForm = ({onSubmit}) => {
-    const [state, setState] = useState({
-        name: '',
-        number: '',
-    });
-
-    // const dispatch = useDispatch();
-    // const contacts = useSelector(state => state.contacts.contacts);
+const ContactForm = () => {
+    const [name, setName] = useState('');
+    const [number, setNumber] = useState('');
+    const dispatch = useDispatch();
 
     const onFormSubmit = e => {
         e.preventDefault();
-        onSubmit(state);
+        dispatch(
+          addContact({
+            name: name,
+            number: number,
+          })
+        );
         resetForm();
-    };
-
+      };
     
-
-    const resetForm = () => {
-        setState({ name: '', number: '' });
-    };
-
     const onInputChange = e => {
-        const { name, value } = e.currentTarget;
-        setState(prevState => ({ ...prevState, [name]: value }));
-    };
+        const { name, value } = e.target;
+        switch (name) {
+          case 'name':
+            setName(value);
+            break;
+          case 'number':
+            setNumber(value);
+            break;
+    
+          default:
+            break;
+        }
+      };
 
     return (
         <Form onSubmit={onFormSubmit}>
@@ -41,7 +46,7 @@ export const ContactForm = ({onSubmit}) => {
                     required
                     placeholder="Enter contact name"
                     onChange={onInputChange}
-                    value={state.name}
+                    value={name}
                 />
             </Label>
             <Label>
@@ -54,10 +59,12 @@ export const ContactForm = ({onSubmit}) => {
                     required
                     placeholder="Enter contact number"
                     onChange={onInputChange}
-                    value={state.number}
+                    value={number}
                 />
             </Label>
             <SubmitBtn type="submit">Add contact</SubmitBtn>
         </Form>
     );
 };
+
+export default ContactForm;
