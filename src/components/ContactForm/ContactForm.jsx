@@ -1,15 +1,28 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Label, Input, SubmitBtn } from './ContactForm.styled';
-import { addContact, resetForm } from 'components/Redux/contactSlice';
+import { addContact } from 'components/Redux/contactSlice';
 
 const ContactForm = () => {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
     const dispatch = useDispatch();
+    const contacts = useSelector(state => state.contacts)
 
     const onFormSubmit = e => {
         e.preventDefault();
+        const contact = Array.isArray(contacts) && contacts.find(
+          (c) =>
+            c.name.toLowerCase() === name.toLowerCase() ||
+            c.number.toLowerCase() === number.toLowerCase()
+        );
+        if (contact) {
+          if (contact.name.toLowerCase() === name.toLowerCase()) {
+            return alert(`${name} is already in contact`);
+          } else if (contact.number.toLowerCase() === number.toLowerCase()) {
+            return alert(`${number} is already in contact`);
+          }
+        };
         dispatch(
           addContact({
             name: name,
@@ -17,6 +30,11 @@ const ContactForm = () => {
           })
         );
         resetForm();
+      };
+
+      const resetForm = () => {
+        setName('');
+        setNumber('');
       };
     
     const onInputChange = e => {

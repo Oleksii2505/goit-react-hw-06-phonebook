@@ -9,17 +9,6 @@ const contactSlice = createSlice({
     initialState: {numbers: []},
     reducers: {
         addContact(state, { payload }) {
-            for (const contact of state.numbers) {
-              if (payload.name.toLowerCase() === contact.name.toLowerCase()) {
-                return alert( `${payload.name} is already in contact`);
-              } else if (
-                payload.number.toLowerCase() === contact.number.toLowerCase()
-              ) {
-                return alert(
-                  `${payload.number} is already in contact`
-                );
-              }
-            }
       
             state.numbers.push({ ...payload, id: nanoid() });
           },
@@ -31,13 +20,6 @@ const contactSlice = createSlice({
           },
     },   
 })
-
-export const resetForm =()=> {
-    return {
-        name: '',
-        number: '',
-    }
-}
 
 const persistConfig = {
     key: 'contacts',
