@@ -8,16 +8,27 @@ const contactSlice = createSlice({
     name: 'contacts',
     initialState: {numbers: []},
     reducers: {
-        addContact(state, { payload }) {
-      
-            state.numbers.push({ ...payload, id: nanoid() });
+      addContact: {
+          reducer(state, action) {
+              state.numbers.push(action.payload);
           },
-          delContact(state, action) {
+          prepare({ name, number }) {
+              return {
+                  payload: {
+                      name,
+                      number,
+                      id: nanoid(),
+                  },
+              };
+          },
+      },
+
+      delContact(state, action) {
             const index = state.numbers.findIndex(
               contact => contact.id === action.payload
             );
             state.numbers.splice(index, 1);
-          },
+      },
     },   
 })
 
